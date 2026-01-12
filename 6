@@ -1,0 +1,88 @@
+a) 2:1 Multiplexer
+Verilog Dataflow description code
+module mux_21(s, i0, i1, y);
+input s, i0, i1;
+output y;
+assign y = s ? i1 : i0; // or y=((~select) & i0) | (Select & i1);
+endmodule
+
+Testbench code
+module mux21_tb;
+  reg s, i0, i1;
+  wire y;
+  mux_21 uut(.s(s), .i0(i0), .i1(i1), .y(y));
+  initial begin
+    s=0; i0=1; i1=0; #100;
+    s=1; i0=1; i1=0; #100;
+  end
+endmodule
+
+b) 4:1 Multiplexer
+Verilog Behavioral Description Code
+module mux_41 (select, i0, i1, i2, i3, y);
+input [1:0] select;
+input i0, i1, i2, i3;
+output reg y;
+always @ (*)
+  begin
+  case (select)
+    2’b00 : y=i0;
+    2’b01 : y=i1;
+    2’b10 : y=i2;
+    2’b11 : y=i3;
+  endcase
+end
+endmodule
+
+Test bench code
+module mux41_tb;
+reg [1:0] select;
+reg i0, i1, i2, i3;
+wire y;
+mux_41 uut (.select(select), .i0(i0), .i1(i1), .i2(i2), .i3(i3), .y(y));
+initial begin
+select=2’b00; i0=0; i1=1; i3=0; i4=1; #100;
+select=2’b01; i0=0; i1=1; i3=0; i4=1; #100;
+select=2’b10; i0=0; i1=1; i3=0; i4=1; #100;
+select=2’b11; i0=0; i1=1; i3=0; i4=1; #100;
+end
+endmodule
+
+c) 8:1 Multiplexer
+Verilog Behavioral description code
+module mux_81(select, i, y);
+  input [7:0] i;
+  input [2:0] select;
+  output reg y;
+  always @ (*)
+  begin
+  case(select)
+    3'b000: y=i[0];
+    3'b001: y=i[1];
+    3'b010: y=i[2];
+    3'b011: y=i[3];
+    3'b100: y=i[4];
+    3'b101: y=i[5];
+    3'b110: y=i[6];
+    3'b111: y=i[7];
+  endcase
+end
+endmodule
+
+Testbench code
+module mux81_tb;
+reg [7:0] i;
+reg [2:0] select;
+wire y;
+mux_81 uut (.select(select), .i(i), .y(y));
+initial begin
+select=3’b000; i=8’b01101010; #100;
+select=3’b001; i=8’b01101010; #100;
+select=3’b010; i=8’b01101010; #100;
+select=3’b011; i=8’b01101010; #100;
+select=3’b100; i=8’b01101010; #100;
+select=3’b101; i=8’b01101010; #100;
+select=3’b110; i=8’b01101010; #100;
+select=3’b111; i=8’b01101010; #100;
+end
+endmodule
